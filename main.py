@@ -58,5 +58,12 @@ def main():
 
 if __name__ == "__main__":
     #logging.basicConfig(level=-1)
-     main()
+    counter = 0
+    while True:
+        try:
+            main()
+        except:
+            print(f"Attempting to restart {counter}")
+            counter+=1
+        
     
