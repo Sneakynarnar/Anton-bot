@@ -62,8 +62,7 @@ if __name__ == "__main__":
     while True:
         try:
             main()
-        except:
-            print(f"Attempting to restart {counter}")
-            counter+=1
-        
+        except asyncio.TimeoutError as e:
+            print(f"{e} \nAttempting to restart {counter}")
+            counter+=1        
     
