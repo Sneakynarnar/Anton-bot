@@ -9,6 +9,7 @@ import mysql.connector
 import re
 #from discord.ext import commands
 from interactions import *
+
 from interactions.ext.wait_for import wait_for, setup
 from interactions.ext.tasks import create_task, IntervalTrigger
 import interactions
@@ -115,6 +116,33 @@ class COTW(interactions.Extension):
         cur.close()
         con.close()
 
+    @interactions.extension_command(name="submitafter", description="submits all posts after a certain point", scope=GUILD_ID, default_member_permissions=interactions.Permissions.ADMINISTRATOR, options = [interactions.Option(name="message", description="The message to submit after", type=interactions.OptionType.INTEGER)])
+    async def submitAfter(self, ctx: interactions.CommandContext, id: interactions.Message):
+        channel = interactions.Channel(**await self.bot._http.get_channel(self.channel), _client=self.bot._http)
+        cur = connect(host)
+        messages = await channel.history(start_at=id)
+        status = ""
+        for message in messages:
+            asyncio.sleep(0.1)
+            message = interactions.Message(**await self.bot._http.get_message(channel_id=self.channel,message_id= ctx.target.id), _client=self.bot._http)
+
+            cur.execute("SELECT * FROM submissions WHERE msgId = %s", (int(message.id),))
+            records = cur.fetchone()
+            logger.debug(records)
+            if records is not None:
+                await ctx.send("That person's clips has already been submitted!", ephemeral=True)
+                return
+            authorId = message.author.id
+            cur.execute("INSERT INTO submissions VALUES (%s,%s)", (int(authorId), int(message.id)))
+
+            await message.create_reaction("👍", )
+            await message.create_reaction("👎", )
+
+            status+=f"Resubmitted {message.author.username}'s clip! https://discord.com/channels/917891087006334976/{str(self.channel)}/{message.id}\n"
+            if message.thread is None: await message.create_thread(name="Clip comments", invitable=True)
+            con.commit()
+        cur.close()
+        con.close()
     @interactions.extension_message_command(name="Submit", type=interactions.ApplicationCommandType.MESSAGE, scope=GUILD_ID,default_member_permissions=interactions.Permissions.ADMINISTRATOR)
     async def submit_command(self, ctx: interactions.CommandContext):
         cur = connect(host)
