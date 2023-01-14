@@ -290,13 +290,13 @@ class COTW(interactions.Extension):
                         await error.delete()
                         return
                 
-                for handle in ALLOWED_LINKS:
-                    if word.startswith("https://medal") or word.startswith("https://youtu") or word.startswith("https://cdn.discordapp"):
-                        allowed = True
-                        break
-                    if word.startswith("https://www." + handle):
-                        allowed = True
-                        break
+                    for handle in ALLOWED_LINKS:
+                        if word.startswith("https://medal") or word.startswith("https://youtu.be") or word.startswith("https://cdn.discordapp"):
+                            allowed = True
+                            break
+                        if word.startswith("https://www." + handle):
+                            allowed = True
+                            break
             if not (isLink or upload) or (isLink and upload):
                 member = interactions.Member(**await self.bot._http.get_member(guild_id=GUILD_ID, member_id=msg.author.id))
                 roles = member.roles if member.roles is not None else []
