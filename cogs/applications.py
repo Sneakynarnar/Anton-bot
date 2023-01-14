@@ -56,10 +56,12 @@ class Applications(interactions.Extension):
 
     @interactions.extension_command(name="srm", description="u know what it does nana", scope=GUILD_ID)
     async def srm(self, ctx):
+        
         channel = interactions.Channel(**await self.bot._http.get_channel(921350783071584256), _client=self.bot._http)
         await channel.send(content="Click the button for the role", components=[interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="6mans", label="Ping me for 6 mans"),
-        interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="announcement", label="Ping me for small announcements"),
-        interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="uploads", label="Ping me for uploads")])
+        interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="EU", label="EU"),
+        interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="NA", label="NA"),
+        interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="OCE", label="OCE")])
     @interactions.extension_modal("modapp")
     async def modal_response(self, ctx, response):
         cur = connect(host)
@@ -149,6 +151,13 @@ class Applications(interactions.Extension):
             role = await ctx.guild.get_role(1017569035279421500)
         elif ctx.custom_id == "uploads":
             role = await ctx.guild.get_role(1018646108198682634)
+        elif ctx.custom_id == "EU":
+            role = await ctx.guild.get_role(1063580354608365568)
+        elif ctx.custom_id == "NA":
+            role = await ctx.guild.get_role(1063580400221438003)
+        elif ctx.custom_id == "OCE":
+            role = await ctx.guild.get_role(1063580429468315698)
+
         else:
             return
         try:
