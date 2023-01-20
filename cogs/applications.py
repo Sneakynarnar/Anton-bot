@@ -58,7 +58,7 @@ class Applications(interactions.Extension):
     async def srm(self, ctx):
         
         channel = interactions.Channel(**await self.bot._http.get_channel(921350783071584256), _client=self.bot._http)
-        await channel.send(content="Click the button for the role", components=[interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="6mans", label="Ping me for 6 mans"),
+        await channel.send(content="Click the button for the role", components=[
         interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="EU", label="EU"),
         interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="NA", label="NA"),
         interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="OCE", label="OCE")])
