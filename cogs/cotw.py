@@ -355,6 +355,12 @@ class COTW(interactions.Extension):
         print(datetime.utcnow().strftime("%a").lower())
         if datetime.utcnow().strftime("%a").lower() == "mon" and not triggered:
             date = datetime.utcnow()
+            try:
+                modChannel = interactions.Channel(**await self.bot._http.get_channel(992955793697689690), _client=self.bot._http)
+                embed = await self.getLeaderBoard()
+                await modChannel.send(embeds=embed)
+            except Excpetion as e:
+                modChannel.send(f"Error trying to send leaderboard: \n\n\"{e}\"")
             logger.debug(f"Restarting week at {date}")
             cur = connect(host)
             cur.execute("DELETE FROM submissions")
@@ -362,9 +368,8 @@ class COTW(interactions.Extension):
             channel = interactions.Channel(**await self.bot._http.get_channel(self.channel), _client=self.bot._http)
             embed= interactions.Embed(title="All submissions reset!", description="Every monday at midnight, submissions reset for the next video. Do /submissions to see your submissions")
             await channel.send(embeds=embed)
-            modChannel = interactions.Channel(**await self.bot._http.get_channel(992955793697689690), _client=self.bot._http)
-            embed = await self.getLeaderBoard()
-            await modChannel.send(embeds=embed)
+            
+            
 
             cur.close()
             con.close()
