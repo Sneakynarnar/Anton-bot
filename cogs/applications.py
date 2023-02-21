@@ -174,7 +174,7 @@ class Applications(interactions.Extension):
             else:
                 if role.id in RANKED_ROLES:
                     for role in ctx.author.roles:
-                        if role.id in RANKED_ROLES:
+                        if role in RANKED_ROLES:
                             await ctx.send(content=f"You already have the {role.name} role")
                             return
                 await ctx.author.add_role(role, ctx.guild.id)
