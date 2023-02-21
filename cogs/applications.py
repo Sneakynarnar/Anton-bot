@@ -173,9 +173,9 @@ class Applications(interactions.Extension):
                 await ctx.send(content=f"I have removed the {role.name} role!", ephemeral=True, )
             else:
                 if role.id in RANKED_ROLES:
-                    for role in ctx.author.roles:
-                        if role in RANKED_ROLES:
-                            await ctx.send(content=f"You already have the {role.name} role")
+                    for rankrole in ctx.author.roles:
+                        if rankrole in RANKED_ROLES:
+                            await ctx.send(content=f"You already have the {rankrole.name} role")
                             return
                 await ctx.author.add_role(role, ctx.guild.id)
                 await ctx.send(content=f"I have given you the {role.name} role!", ephemeral=True, )
