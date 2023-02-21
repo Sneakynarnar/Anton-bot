@@ -13,6 +13,7 @@ from interactions.ext.wait_for import wait_for, setup
 import interactions
 from interactions.api.models.message import Emoji
 import asyncio
+
 host = "localhost"
 #host = "212.111.42.251"
 def connect(host):
@@ -28,7 +29,7 @@ def connect(host):
 
 GUILD_ID = 917891087006334976
 MODS = []
-
+RANKED_ROLES = [921350819733995520,921350981994827796,921351026852892702,921351068514930699,921351115692445716,921351235263672380,921351276816637963]
 
 class Applications(interactions.Extension):
     def __init__(self, bot):
@@ -165,10 +166,17 @@ class Applications(interactions.Extension):
             return
         try:
             if role is None: return
+            
+            
             if role.id in ctx.author.roles:
                 await ctx.author.remove_role(role, ctx.guild.id)
                 await ctx.send(content=f"I have removed the {role.name} role!", ephemeral=True, )
             else:
+                if role.id in RANKED_ROLES:
+                    for role in ctx.author.roles:
+                        if role.id in RANKED_ROLES:
+                            await ctx.send(content=f"You already have the {role.name} role")
+                            return
                 await ctx.author.add_role(role, ctx.guild.id)
                 await ctx.send(content=f"I have given you the {role.name} role!", ephemeral=True, )
         except Exception as e:
