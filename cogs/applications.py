@@ -172,6 +172,10 @@ class Applications(interactions.Extension):
                 await ctx.author.remove_role(role, ctx.guild.id)
                 await ctx.send(content=f"I have removed the {role.name} role!", ephemeral=True, )
             else:
+                if ctx.author.id == 617009307321368781 and role == 921351235263672380:
+                    await ctx.send("https://www.fiverr.com/astrix2/provide-professional-rocket-league-coaching", ephemeral=True)
+                    return
+                    
                 if role.id in RANKED_ROLES:
                     for rankrole in ctx.author.roles:
                         if rankrole in RANKED_ROLES:
