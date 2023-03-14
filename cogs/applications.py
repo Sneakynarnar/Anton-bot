@@ -13,8 +13,9 @@ from interactions.ext.wait_for import wait_for, setup
 import interactions
 from interactions.api.models.message import Emoji
 import asyncio
-
+import cloudscraper
 host = "localhost"
+rankMap = {"Bronze": 1, "Silver": 2, "Gold": 3, "Platinum": 4, "Diamond": 5, "Champion": 6, "Grand Champion": 7, "Supersonic Legend": 8}
 #host = "212.111.42.251"
 def connect(host):
     global con
@@ -55,13 +56,63 @@ class Applications(interactions.Extension):
         fmt += f" and {seconds} seconds"
         return fmt
 
+        
     @interactions.extension_command(name="srm", description="u know what it does nana", scope=GUILD_ID)
     async def srm(self, ctx):
         
         channel = interactions.Channel(**await self.bot._http.get_channel(921350783071584256), _client=self.bot._http)
-        await channel.send(content="Ping me when there is an active:", components=[interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="2mans", label="2 mans"),
-                                                                    interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="4mans", label="4 mans"),
-                                                                    interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id='6mans', label='6 mans')])                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+        await channel.send(
+            content="Click this for the bot to give you your rank, note that you could still be moved down if you are found to be not playing at your division in 2/4/6 mans\
+                **This data is stored, and if you are found to enter an account that does not belong to you, you WILL be banned.**", 
+                components=[interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="Give me my ranked role", label="autorank")])  
+    
+    @interactions.extension_modal("autorankrole")
+    async def rank_response(self, ctx, response):
+        cur = connect(host)
+        scraper = cloudscraper.create_scraper()
+        data = json.loads(scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" +response).text)
+        if "errors" in data:
+            await ctx.send("There was a problem finding the data for this account (it probably doesn't exist), if you feel this was in error contact Sneakynarnar#7573")
+            
+        else:
+            topRank = "Bronze"
+            for segment in data["data"]["segments"]:
+                if segment["type"] == "overview":
+                    continue
+                else:
+                    realRank = segment["stats"]["tier"]["rank"]
+                    rankList = realRank.split()
+                    rank = rankList[0]
+                    if rankMap[topRank] < rankMap[rank]:
+                        topRank = rank
+                    
+            topRank = topRank.lower()
+                        
+        if topRank == "bronze":
+            role = await ctx.guild.get_role(921350819733995520)
+        elif topRank == "silver":
+            role = await ctx.guild.get_role(921350981994827796)
+        elif topRank == "gold":
+            role = await ctx.guild.get_role(921351026852892702)
+        elif topRank == "platinum":
+            role = await ctx.guild.get_role(921351068514930699)
+        elif topRank == "diamond":
+            role = await ctx.guild.get_role(921351115692445716)
+        elif topRank == "champ":
+            role = await ctx.guild.get_role(921351174618234891)
+        elif topRank == "grand champion":
+            role = await ctx.guild.get_role(921351235263672380)
+        elif topRank == "supersonic legend":             
+            role = await ctx.guild.get_role(921351276816637963)           
+    
+        if role.id in RANKED_ROLES:
+            for rankrole in ctx.author.roles:
+                if rankrole in RANKED_ROLES:
+                    await ctx.author.remove_role(rankrole, ctx.guild.id)
+                    return
+        await ctx.author.add_role(role, ctx.guild.id)
+        await ctx.send(content=f"I have given you the {role.name} role!", ephemeral=True, )        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
     @interactions.extension_modal("modapp")
     async def modal_response(self, ctx, response):
         cur = connect(host)
@@ -161,6 +212,12 @@ class Applications(interactions.Extension):
             role = await ctx.guild.get_role(1063580400221438003)
         elif ctx.custom_id == "OCE":
             role = await ctx.guild.get_role(1063580429468315698)
+        elif ctx.custom_id == "autorole":
+            modal = interactions.Modal(title="Enter your epic games Id", custom_id="modapp",
+            components=[interactions.TextInput(style=interactions.TextStyleType.PARAGRAPH, custom_id="autoroleresponse",
+            label="Enter your epic username",
+            min_lenth=2, max_length=16)])
+            await ctx.popup(modal)
 
         else:
             return
@@ -172,7 +229,7 @@ class Applications(interactions.Extension):
                 await ctx.author.remove_role(role, ctx.guild.id)
                 await ctx.send(content=f"I have removed the {role.name} role!", ephemeral=True, )
             else:
-                if (ctx.author.id == 617009307321368781 and role.id == 921351235263672380) or (ctx.author.id == 395787452331327490 and role.id == 921351235263672380 ):
+                if (ctx.author.id == 617009307321368781 and role.id == 921351235263672380) or (ctx.author.id == 395787452331327490 and role.id == 921351235263672380):
                     await ctx.send("https://www.fiverr.com/astrix2/provide-professional-rocket-league-coaching", ephemeral=True)
                     return
                     
