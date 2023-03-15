@@ -4,6 +4,7 @@
 #import random
 #from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageColor
 #import io
+import requests
 import mysql.connector
 #import re
 import cfscrape
