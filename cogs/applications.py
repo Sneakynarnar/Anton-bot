@@ -74,7 +74,7 @@ class Applications(interactions.Extension):
         cur = connect(host)
         ua = UserAgent()
         
-        scraper = cloudscraper.create_scraper()
+        scraper = cfscraper.create_scraper()
         res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + response, headers={"useragent": f"{ua.random}"})
        
         print(res.text)
@@ -205,8 +205,8 @@ class Applications(interactions.Extension):
             if epicName is not None:
                 epicName = epicName[0]
                 ua = UserAgent()
-                scraper = cloudscraper.create_scraper()
-                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName, headers={"useragent": f"{ua.random}"})
+                scraper = cfscraper.create_scraper()
+                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName, headers={"useragent": f"{ua.chrome}"})
                 print(res.text)
                 try:
                     data = json.loads(res.text)
