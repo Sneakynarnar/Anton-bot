@@ -71,7 +71,9 @@ class Applications(interactions.Extension):
     async def rank_response(self, ctx, response):
         cur = connect(host)
         scraper = cloudscraper.create_scraper()
-        data = json.loads(scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + response).text)
+        res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + response)
+        print(res.text)
+        data = json.loads(res.text)
         if "errors" in data:
             await ctx.send("There was a problem finding the data for this account (it probably doesn't exist), if you feel this was in error contact Sneakynarnar#7573")
             
@@ -195,7 +197,9 @@ class Applications(interactions.Extension):
             if epicName is not None:
                 epicName = epicName[0]
                 scraper = cloudscraper.create_scraper()
-                data = json.loads(scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName).text)
+                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName)
+                print(res.text)
+                data = json.loads(res.text)
                 if "errors" in data:
                     await ctx.send("There was a problem finding the data for this account (it probably doesn't exist), if you feel this was in error contact Sneakynarnar#7573", ephemeral=True)
                     
