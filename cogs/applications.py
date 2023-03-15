@@ -206,8 +206,8 @@ class Applications(interactions.Extension):
             if epicName is not None:
                 epicName = epicName[0]
                 ua = UserAgent()
-                scraper = cfscrape.create_scraper()
-                res = cloudscraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName, headers={"useragent": f"{ua.random}"})
+                scraper = cloudscraper.create_scraper()
+                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName, headers={"useragent": f"{ua.random}"})
                 print(res.text)
                 try:
                     data = json.loads(res.text)
