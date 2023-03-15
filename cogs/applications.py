@@ -9,6 +9,7 @@ import mysql.connector
 import datetime
 from datetime import datetime, timedelta
 from interactions import *
+import httpx
 from interactions.ext.wait_for import wait_for, setup
 import interactions
 import json
@@ -70,7 +71,7 @@ class Applications(interactions.Extension):
     @interactions.extension_modal("autorank")
     async def rank_response(self, ctx, response):
         cur = connect(host)
-        scraper = cloudscraper.create_scraper()
+        scraper = httpx.Client(http2=True)
         res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + response)
         print(res.text)
         try:
@@ -199,7 +200,7 @@ class Applications(interactions.Extension):
             epicName = cur.fetchone()
             if epicName is not None:
                 epicName = epicName[0]
-                scraper = cloudscraper.create_scraper()
+                scraper = httpx.Client(http2=True)
                 res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName)
                 print(res.text)
                 try:
