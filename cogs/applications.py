@@ -206,15 +206,21 @@ class Applications(interactions.Extension):
             if epicName is not None:
                 epicName = epicName[0]
                 ua = UserAgent()
-                scraper = cloudscraper.create_scraper()
-                user = ua.random
+                scraper = cloudscraper.create_scraper(browser={
+        'browser': 'firefox',
+        'platform': 'windows',
+        'desktop': True
+        })
+                user = ua.firefox
                 res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName, headers={"useragent": f"{user}"})
                 print(res.text)
                 print(user)
+                
                 try:
                     data = json.loads(res.text)
                 except:
                     await ctx.send("There was a problem accessing the tracker api, please try again later. Contact admins if this keeps happening.", ephemeral=True)
+                    return
                 if "errors" in data:
                     await ctx.send("There was a problem finding the data for this account (it probably doesn't exist), if you feel this was in error contact Sneakynarnar#7573", ephemeral=True)
                     
