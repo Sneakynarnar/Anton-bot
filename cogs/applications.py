@@ -207,9 +207,10 @@ class Applications(interactions.Extension):
                 epicName = epicName[0]
                 ua = UserAgent()
                 scraper = cloudscraper.create_scraper()
-                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName, headers={"useragent": f"{ua.ie}"})
+                user = ua.random
+                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName, headers={"useragent": f"{user}"})
                 print(res.text)
-                print(ua.ie)
+                print(user)
                 try:
                     data = json.loads(res.text)
                 except:
