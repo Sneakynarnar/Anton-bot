@@ -6,6 +6,8 @@
 #import io
 import mysql.connector
 #import re
+import cfscrape
+from fake_useragent import UserAgent
 import datetime
 from datetime import datetime, timedelta
 from interactions import *
@@ -203,12 +205,13 @@ class Applications(interactions.Extension):
             epicName = cur.fetchone()
             if epicName is not None:
                 epicName = epicName[0]
+                ua = UserAgent()
                 scraper = cloudscraper.create_scraper(browser={
                 'browser': 'chrome',
                 'platform': 'windows',
                 'desktop': True
                 })
-                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName)
+                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/", headers={"useragent": f"{ua.random}"})
                 print(res.text)
                 try:
                     data = json.loads(res.text)
