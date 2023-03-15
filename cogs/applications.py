@@ -60,17 +60,17 @@ class Applications(interactions.Extension):
     @interactions.extension_command(name="srm", description="u know what it does nana", scope=GUILD_ID)
     async def srm(self, ctx):
         
-        channel = interactions.Channel(**await self.bot._http.get_channel(921350783071584256), _client=self.bot._http)
+        channel = interactions.Channel(**await self.bot._http.get_channel(922371812296368130), _client=self.bot._http)
         await channel.send(
             content="Click this for the bot to give you your rank, note that you could still be moved down if you are found to be not playing at your division in 2/4/6 mans\
                 **This data is stored, and if you are found to enter an account that does not belong to you, you WILL be banned.**", 
-                components=[interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="Give me my ranked role", label="autorank")])  
+                components=[interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="autoranks", label="Give me my ranked role")])  
     
     @interactions.extension_modal("autorankrole")
     async def rank_response(self, ctx, response):
         cur = connect(host)
         scraper = cloudscraper.create_scraper()
-        data = json.loads(scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" +response).text)
+        data = json.loads(scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + response).text)
         if "errors" in data:
             await ctx.send("There was a problem finding the data for this account (it probably doesn't exist), if you feel this was in error contact Sneakynarnar#7573")
             
@@ -98,7 +98,7 @@ class Applications(interactions.Extension):
             role = await ctx.guild.get_role(921351068514930699)
         elif topRank == "diamond":
             role = await ctx.guild.get_role(921351115692445716)
-        elif topRank == "champ":
+        elif topRank == "champion":
             role = await ctx.guild.get_role(921351174618234891)
         elif topRank == "grand champion":
             role = await ctx.guild.get_role(921351235263672380)
@@ -111,7 +111,10 @@ class Applications(interactions.Extension):
                     await ctx.author.remove_role(rankrole, ctx.guild.id)
                     return
         await ctx.author.add_role(role, ctx.guild.id)
-        await ctx.send(content=f"I have given you the {role.name} role!", ephemeral=True, )        
+        cur.execute("INSERT INTO epicUserNames VALUES (%s,%s)", (int(ctx.author.id), response))
+        await ctx.send(content=f"I have given you the {role.name} role! This is your current rank, if you for some reason need to change your epic name, open a support ticket", ephemeral=True)
+        con.commit()
+        con.close() 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
     @interactions.extension_modal("modapp")
     async def modal_response(self, ctx, response):
