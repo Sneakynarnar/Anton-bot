@@ -72,12 +72,11 @@ class Applications(interactions.Extension):
     @interactions.extension_modal("autorank")
     async def rank_response(self, ctx, response):
         cur = connect(host)
-        scraper = cloudscraper.create_scraper(browser={
-        'browser': 'chrome',
-        'platform': 'android',
-        'desktop': False
-        })
-        res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + response)
+        ua = UserAgent()
+        
+        scraper = cfscrape.create_scraper()
+        res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + response, headers={"useragent": f"{ua.random}"})
+       
         print(res.text)
         try:
             data = json.loads(res.text)
@@ -206,12 +205,9 @@ class Applications(interactions.Extension):
             if epicName is not None:
                 epicName = epicName[0]
                 ua = UserAgent()
-                scraper = cloudscraper.create_scraper(browser={
-                'browser': 'chrome',
-                'platform': 'windows',
-                'desktop': True
-                })
-                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/", headers={"useragent": f"{ua.random}"})
+                
+                scraper = cfscrape.create_scraper()
+                res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName, headers={"useragent": f"{ua.random}"})
                 print(res.text)
                 try:
                     data = json.loads(res.text)
