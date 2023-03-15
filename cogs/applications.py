@@ -205,8 +205,8 @@ class Applications(interactions.Extension):
                 epicName = epicName[0]
                 scraper = cloudscraper.create_scraper(browser={
                 'browser': 'chrome',
-                'platform': 'android',
-                'desktop': False
+                'platform': 'windows',
+                'desktop': True
                 })
                 res = scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName)
                 print(res.text)
