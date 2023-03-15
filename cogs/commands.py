@@ -15,6 +15,8 @@ from datetime import datetime
 import asyncio
 host = "localhost"
 chatlog = []
+RANKED_ROLES = [921350819733995520,921350981994827796,921351026852892702,921351068514930699,921351115692445716,921351235263672380,921351174618234891,921351276816637963]
+
 #host = "212.111.42.251"
 def connect(host):
     global con  
@@ -93,19 +95,22 @@ class Commands(interactions.Extension):
     async def invitecommand(self,ctx):
         await ctx.send("You can invite your friends to the server with this link, thanks in advance!: https://discord.gg/QzTjdzKhfm")
 
-    @interactions.extension_command(name="roleall", scope=GUILD_ID, description="Gives everyone a role", default_member_permissions=interactions.Permissions.ADMINISTRATOR)
+    @interactions.extension_command(name="removeroleall", scope=GUILD_ID, description="Gives everyone a role", default_member_permissions=interactions.Permissions.ADMINISTRATOR)
     async def role_all_command(self, ctx):
 
         guild = await ctx.get_guild()
         members = await guild.get_all_members()
-        await ctx.defer()
         for member in members:
             if member.user.bot: continue
+            print(member.username)
             try:
-                await member.add_role(role=968549819947831366, guild_id=GUILD_ID)
+                for rankrole in member.roles:
+                    if rankrole in RANKED_ROLES:
+                        print(member.username, rankrole.name)
+                        await member.remove_role(rankrole, guild.id)
             except Exception as e:
                 print(e)
-        await ctx.send("Dones.")
+        await ctx.send("Done.")
     @interactions.extension_command(name="version", scope=GUILD_ID,description="Version of the bot")
     async def versionCommand(self, ctx):
         embed= interactions.Embed(title="Anton bot", color=self.colour)

@@ -11,12 +11,13 @@ from datetime import datetime, timedelta
 from interactions import *
 from interactions.ext.wait_for import wait_for, setup
 import interactions
+import json
 from interactions.api.models.message import Emoji
 import asyncio
 import cloudscraper
 host = "localhost"
-rankMap = {"Bronze": 1, "Silver": 2, "Gold": 3, "Platinum": 4, "Diamond": 5, "Champion": 6, "Grand Champion": 7, "Supersonic Legend": 8}
-#host = "212.111.42.251"
+rankMap = {"Unranked": 0, "Bronze": 1, "Silver": 2, "Gold": 3, "Platinum": 4, "Diamond": 5, "Champion": 6, "Grand": 7, "Supersonic": 8}
+host = "212.111.42.251"
 def connect(host):
     global con
     con = mysql.connector.connect(
@@ -63,10 +64,10 @@ class Applications(interactions.Extension):
         channel = interactions.Channel(**await self.bot._http.get_channel(922371812296368130), _client=self.bot._http)
         await channel.send(
             content="Click this for the bot to give you your rank, note that you could still be moved down if you are found to be not playing at your division in 2/4/6 mans\
-                **This data is stored, and if you are found to enter an account that does not belong to you, you WILL be banned.**", 
+            **This data is stored, and if you are found to enter an account that does not belong to you, you WILL be banned.**", 
                 components=[interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="autoranks", label="Give me my ranked role")])  
     
-    @interactions.extension_modal("autorankrole")
+    @interactions.extension_modal("autorank")
     async def rank_response(self, ctx, response):
         cur = connect(host)
         scraper = cloudscraper.create_scraper()
@@ -75,20 +76,22 @@ class Applications(interactions.Extension):
             await ctx.send("There was a problem finding the data for this account (it probably doesn't exist), if you feel this was in error contact Sneakynarnar#7573")
             
         else:
-            topRank = "Bronze"
+            topRank = "Unranked"
             for segment in data["data"]["segments"]:
                 if segment["type"] == "overview":
                     continue
                 else:
-                    realRank = segment["stats"]["tier"]["rank"]
+                    realRank = segment["stats"]["tier"]["metadata"]["name"]
+                    if realRank == None: realRank = "Unranked"
                     rankList = realRank.split()
                     rank = rankList[0]
                     if rankMap[topRank] < rankMap[rank]:
                         topRank = rank
                     
             topRank = topRank.lower()
-                        
-        if topRank == "bronze":
+        if topRank == "unranked":
+            await ctx.send("It seems you aren't currently ranked in any gamemodes, please play your placement matches and try again", ephemeral=True)                          
+        elif topRank == "bronze":
             role = await ctx.guild.get_role(921350819733995520)
         elif topRank == "silver":
             role = await ctx.guild.get_role(921350981994827796)
@@ -100,7 +103,7 @@ class Applications(interactions.Extension):
             role = await ctx.guild.get_role(921351115692445716)
         elif topRank == "champion":
             role = await ctx.guild.get_role(921351174618234891)
-        elif topRank == "grand champion":
+        elif topRank == "grand":
             role = await ctx.guild.get_role(921351235263672380)
         elif topRank == "supersonic legend":             
             role = await ctx.guild.get_role(921351276816637963)           
@@ -109,7 +112,7 @@ class Applications(interactions.Extension):
             for rankrole in ctx.author.roles:
                 if rankrole in RANKED_ROLES:
                     await ctx.author.remove_role(rankrole, ctx.guild.id)
-                    return
+
         await ctx.author.add_role(role, ctx.guild.id)
         cur.execute("INSERT INTO epicUserNames VALUES (%s,%s)", (int(ctx.author.id), response))
         await ctx.send(content=f"I have given you the {role.name} role! This is your current rank, if you for some reason need to change your epic name, open a support ticket", ephemeral=True)
@@ -142,6 +145,7 @@ class Applications(interactions.Extension):
         await ctx.get_guild()
         guild = ctx.guild
         cur = connect(host)
+        print(ctx.custom_id)
         role = None
         if ctx.custom_id.startswith("accept"):
             await ctx.defer(edit_origin=True)
@@ -184,6 +188,64 @@ class Applications(interactions.Extension):
                     label="Why should you be mod?",
                     min_lenth=500, max_length=2000)])
             await ctx.popup(modal)
+        elif ctx.custom_id == "autoranks":
+            cur = connect(host)
+            cur.execute("SELECT epicId FROM epicUserNames WHERE discordId = %s", (int(ctx.author.id),))
+            epicName = cur.fetchone()
+            if epicName is not None:
+                epicName = epicName[0]
+                scraper = cloudscraper.create_scraper()
+                data = json.loads(scraper.get("https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/" + epicName).text)
+                if "errors" in data:
+                    await ctx.send("There was a problem finding the data for this account (it probably doesn't exist), if you feel this was in error contact Sneakynarnar#7573", ephemeral=True)
+                    
+                else:
+                    topRank = "Unranked"
+                    for segment in data["data"]["segments"]:
+                        if segment["type"] == "overview":
+                            continue
+                        else:
+                            realRank = segment["stats"]["tier"]["metadata"]["name"]
+                            if realRank == None: realRank = "Unranked"
+                            rankList = realRank.split()
+                            rank = rankList[0]
+                            if rankMap[topRank] < rankMap[rank]:
+                                topRank = rank
+                            
+                    topRank = topRank.lower()
+                if topRank == "unranked":
+                    await ctx.send("It seems you aren't currently ranked in any gamemodes, please play your placement matches and try again", ephemeral=True)                          
+                elif topRank == "bronze":
+                    role = await ctx.guild.get_role(921350819733995520)
+                elif topRank == "silver":
+                    role = await ctx.guild.get_role(921350981994827796)
+                elif topRank == "gold":
+                    role = await ctx.guild.get_role(921351026852892702)
+                elif topRank == "platinum":
+                    role = await ctx.guild.get_role(921351068514930699)
+                elif topRank == "diamond":
+                    role = await ctx.guild.get_role(921351115692445716)
+                elif topRank == "champion":
+                    role = await ctx.guild.get_role(921351174618234891)
+                elif topRank == "grand":
+                    role = await ctx.guild.get_role(921351235263672380)
+                elif topRank == "supersonic":             
+                    role = await ctx.guild.get_role(921351276816637963)           
+            
+                if role.id in RANKED_ROLES:
+                    for rankrole in ctx.author.roles:
+                        if rankrole in RANKED_ROLES:
+                            await ctx.author.remove_role(rankrole, ctx.guild.id)
+
+                await ctx.author.add_role(role, ctx.guild.id)
+                await ctx.send(content=f"I have given you the {role.name} role! This is your current rank on your connected account \"{epicName}\", if you for some reason need to change your epic name, open a support ticket", ephemeral=True)
+
+                return
+            modal = interactions.Modal(title="Enter your epic games Id", custom_id="autorank",
+            components=[interactions.TextInput(style=interactions.TextStyleType.PARAGRAPH, custom_id="autoroleresponse",
+            label="Enter your epic username",
+            min_lenth=2, max_length=16)])
+            await ctx.popup(modal)
 
         elif ctx.custom_id == "bronze":
             role = await ctx.guild.get_role(921350819733995520)
@@ -215,12 +277,6 @@ class Applications(interactions.Extension):
             role = await ctx.guild.get_role(1063580400221438003)
         elif ctx.custom_id == "OCE":
             role = await ctx.guild.get_role(1063580429468315698)
-        elif ctx.custom_id == "autorole":
-            modal = interactions.Modal(title="Enter your epic games Id", custom_id="modapp",
-            components=[interactions.TextInput(style=interactions.TextStyleType.PARAGRAPH, custom_id="autoroleresponse",
-            label="Enter your epic username",
-            min_lenth=2, max_length=16)])
-            await ctx.popup(modal)
 
         else:
             return
