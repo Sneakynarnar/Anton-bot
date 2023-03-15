@@ -61,11 +61,11 @@ class Applications(interactions.Extension):
     @interactions.extension_command(name="srm", description="u know what it does nana", scope=GUILD_ID)
     async def srm(self, ctx):
         
-        channel = interactions.Channel(**await self.bot._http.get_channel(922371812296368130), _client=self.bot._http)
+        channel = interactions.Channel(**await self.bot._http.get_channel(921350783071584256), _client=self.bot._http)
         await channel.send(
-            content="Click this for the bot to give you your rank, note that you could still be moved down if you are found to be not playing at your division in 2/4/6 mans\
-            **This data is stored, and if you are found to enter an account that does not belong to you, you WILL be banned.**", 
-                components=[interactions.Button(style=interactions.ButtonStyle.PRIMARY, custom_id="autoranks", label="Give me my ranked role")])  
+            content="Click this for the bot to give you your rank, note that you could still be moved down if you are found to be not playing at your division in 2/4/6 mans.\
+ **This data is stored, and if you are found to enter an account that does not belong to you, you WILL be banned.**", 
+                components=[interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="autoranks", label="Give me my ranked role")])  
     
     @interactions.extension_modal("autorank")
     async def rank_response(self, ctx, response):

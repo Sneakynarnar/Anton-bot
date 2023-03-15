@@ -97,16 +97,18 @@ class Commands(interactions.Extension):
 
     @interactions.extension_command(name="removeroleall", scope=GUILD_ID, description="Gives everyone a role", default_member_permissions=interactions.Permissions.ADMINISTRATOR)
     async def role_all_command(self, ctx):
-
+        print("hi")
         guild = await ctx.get_guild()
         members = await guild.get_all_members()
+        print(members)
         for member in members:
-            if member.user.bot: continue
             print(member.username)
+            if member.user.bot: continue
+            
             try:
                 for rankrole in member.roles:
                     if rankrole in RANKED_ROLES:
-                        print(member.username, rankrole.name)
+                        print(member.username, rankrole)
                         await member.remove_role(rankrole, guild.id)
             except Exception as e:
                 print(e)
