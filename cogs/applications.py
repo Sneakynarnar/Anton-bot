@@ -71,13 +71,14 @@ class Applications(interactions.Extension):
 #                 components=[interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="autoranks", label="Give me my ranked role")])  
           
         channel = interactions.Channel(**await self.bot._http.get_channel(921350783071584256), _client=self.bot._http)
-        await channel.send(components=[interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="bronze", label="Bronze"),
+        await channel.send(components=[interactions.ActionRow(components=[interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="bronze", label="Bronze"),
                                        interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="silver", label="Silver"),
                                        interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="gold", label="Gold"),
-                                       interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="platinum", label="Platinum"),
+                                       interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="platinum", label="Platinum")]),
+                                       interactions.ActionRow(components=[
                                        interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="diamond", label="Diamond"),
                                        interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="champ", label="Champion"),
-                                       interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="gc", label="Grand Champion"),])  
+                                       interactions.Button(style=interactions.ButtonStyle.SUCCESS, custom_id="gc", label="Grand Champion"),])]),
       
     @interactions.extension_modal("autorank")
     async def rank_response(self, ctx, response):
