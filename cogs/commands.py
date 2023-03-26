@@ -48,7 +48,7 @@ class Commands(interactions.Extension):
             rlqc = ["Nice shot!", "What a save!", "Nice one!", "Nice bump!", "Nice demo!","Nice shot!", "Great pass!",\
                 "Great clear!", "Nice block!", "What a play!", "Thanks!", "No problem.", "Whew.", "Centering.",
                 "In position.", "Incoming!", "All yours.", "Go for it!", "Defending...", "Take the shot!", "Wow!", \
-                "Need boost!", "Close one!", "OMG!", "No way!", "Hxoly cow", "Siiick!", "Savage!", "Noooo!", \
+                "Need boost!", "Close one!", "OMG!", "No way!", "Holy cow", "Siiick!", "Savage!", "Noooo!", \
                 "$#@%!", "Whoops…", "Oops!", "Sorry!", "My fault.", "My bad...", "Calculated!", "Okay.", "gg", \
                  "That was fun!", "Everybody dance!", "Nice moves.", "Well played.", "One. More. Game", "Rematch!", \
                     "This is Rocket League!", "Get ready!", "Here. We. Go", "Nice cars.", "What a game!", "Faking!", \
