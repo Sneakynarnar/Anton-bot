@@ -91,11 +91,11 @@ class Commands(interactions.Extension):
         print("Commands Cog loaded!")
         print(self.bot.guilds)
 
-    @interactions.extension_command(name="faq", scope=GUILD_ID, description="Commonly asked queries that are asked all the time so we made a commmand", options =[
+    @interactions.extension_command(name="faq", scope=GUILD_ID, description="Commonly asked queries that are asked all the time so we made a commmand", options=[
         interactions.Option(
             name="noplatform",
             description="Describes why some platforms don't work",
-            tyoe=interactions.OptionType.SUB_COMMAND,
+            type=interactions.OptionType.SUB_COMMAND,
         ),
         interactions.Option(
             name="noplatform2",
