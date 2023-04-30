@@ -130,7 +130,7 @@ class Commands(interactions.Extension):
         interactions.Option(
             name="deranked",
             description="Addresses people getting their ranks taken away",
-            type=interaction.OptionType.SUB_COMMAND
+            type=interactions.OptionType.SUB_COMMAND
         )
     ])
     async def faqCommand(self, ctx, sub_command):
