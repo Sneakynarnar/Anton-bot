@@ -63,10 +63,12 @@ class COTW(interactions.Extension):
         i = 0
         for record in records:
             msgId = record[1]
-            msg = interactions.Message(**await self.bot._http.get_message(self.channel, msgId))
+            try:
+                msg = interactions.Message(**await self.bot._http.get_message(self.channel, msgId))
+            except:
+                continue
             reactions = msg.reactions
             up = reactions[0].count - 1
-            #down = reactions[0].count
             score = up
             records[i] = list(records[i])
             records[i].append(score)
@@ -134,9 +136,7 @@ class COTW(interactions.Extension):
                 return
             authorId = message.author.id
             cur.execute("INSERT INTO submissions VALUES (%s,%s)", (int(authorId), int(message.id)))
-
             await message.create_reaction("👍", )
-            await message.create_reaction("👎", )
 
             status+=f"Resubmitted {message.author.username}'s clip! https://discord.com/channels/917891087006334976/{str(self.channel)}/{message.id}\n"
             if message.thread is None: await message.create_thread(name="Clip comments", invitable=True)
