@@ -140,7 +140,7 @@ class Commands(interactions.Extension):
             embed.description = "Youtube, Gif your game, Medal, Xbox and Twitter are the only platforms supported at the moment, If you want to post a clip in ⁠<#941073900173938718> you need to use one of the supported platforms."
         elif sub_command == "noplatform2":
             embed.title = "Why don't you add X platform as a supported platform?"
-            embed.description = "We don't add your platform because it is probably annoying to download from and/or only supports weird formats of video that are too much effort to put in the video, simply upload your clip to a supported platform",
+            embed.description = "We don't add your platform because it is probably annoying to download from and/or only supports weird formats of video that are too much effort to put in the video, simply upload your clip to a supported platform"
         elif sub_command == "queueing":
             embed.title = "How does 2/4/6 mans work? / How do I queue?"
             embed.description = "Simply type /queue to queue into a match. Once there are enough in the queue, you can join the private match by either being in the same party as the other player, or by setting a username and password private match. You can join the VC and to agree on a best of 3 or a best of 5 prior to the match in 2mans only. After the series, 1 person will report the result, using '/report', where they must include the match ID (the number provided by the bot when the teams were announced) and the result as either 'won' or 'lost'. This gets reported onto the leaderboard! Which can be accessed by using the 6 mans /leaderboard command (not the anton-bot one)."
