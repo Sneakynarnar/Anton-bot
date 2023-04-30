@@ -91,6 +91,77 @@ class Commands(interactions.Extension):
         print("Commands Cog loaded!")
         print(self.bot.guilds)
 
+    @interactions.extension_command(name="faq", scope=GUILD_ID, description="Commonly asked queries that are asked all the time so we made a commmand", options =[
+        interactions.Option(
+            name="noplatform",
+            description="Describes why some platforms don't work",
+            tyoe=interactions.OptionType.SUB_COMMAND,
+        ),
+        interactions.Option(
+            name="noplatform2",
+            description="Describes why it is like this",
+            type=interactions.OptionType.SUB_COMMAND,
+        ),
+        interactions.Option(
+            name="queueing",
+            description="Describes how to queue in 6 mans",
+            type=interactions.OptionType.SUB_COMMAND,
+        ),
+        interactions.Option(
+            name="posting",
+            description="Describes how to post clips in clip of the week",
+            type=interactions.OptionType.SUB_COMMAND,
+        ),
+        interactions.Option(
+            name="i_won",
+            description="Describes what happens when you win",
+            type=interactions.OptionType.SUB_COMMAND,
+        ),
+        interactions.Option(
+            name="dislikes",
+            description="Dislikes don't count",
+            type=interactions.OptionType.SUB_COMMAND
+        ),
+        interactions.Option(
+            name="caniqueue",
+            description="Addresses the classic 'can I queue' question",
+            type=interactions.OptionType.SUB_COMMAND,
+        ),
+        interactions.Option(
+            name="deranked",
+            description="Addresses people getting their ranks taken away",
+            type=interaction.OptionType.SUB_COMMAND
+        )
+    ])
+    async def faqCommand(self, ctx, sub_command):
+        embed = interactions.Embed()
+        embed.footer = "Frequently asked questions | Anton-bot | Sneakynarnar#7573"
+        if sub_command == "noplatform":
+            embed.title = "Why is X link not working in submit-my-clips?"
+            embed.description = "Youtube, Gif your game, Medal, Xbox and Twitter are the only platforms supported at the moment, If you want to post a clip in ⁠<#941073900173938718> you need to use one of the supported platforms."
+        elif sub_command == "noplatform2":
+            embed.title = "Why don't you add X platform as a supported platform?"
+            embed.description = "We don't add your platform because it is probably annoying to download from and/or only supports weird formats of video that are too much effort to put in the video, simply upload your clip to a supported platform",
+        elif sub_command == "queueing":
+            embed.title = "How does 2/4/6 mans work? / How do I queue?"
+            embed.description = "Simply type /queue to queue into a match. Once there are enough in the queue, you can join the private match by either being in the same party as the other player, or by setting a username and password private match. You can join the VC and to agree on a best of 3 or a best of 5 prior to the match in 2mans only. After the series, 1 person will report the result, using '/report', where they must include the match ID (the number provided by the bot when the teams were announced) and the result as either 'won' or 'lost'. This gets reported onto the leaderboard! Which can be accessed by using the 6 mans /leaderboard command (not the anton-bot one)."
+        elif sub_command == "posting":
+            embed.title = "How do I post my clip for COTW?"
+            embed.description = "Simply post the link in the <#941073900173938718> as long as a valid link is somewhere in the message it will count, if you get enough upvotes you will be in clip of the week! Check your submissions with /submissions"
+        elif sub_command == "i_won":
+            embed.title = "I won, where are my credits?"
+            embed.description="You only win if you are the most voted after 24 hours, and if you won you will, eventually, be contacted about it. Be patient!"
+        elif sub_command == "dislikes":
+            embed.title = "People keep disliking my clips :<"
+            embed.description = "Don't worry, dislikes don't count for being in the video. Purely just to see what people think"
+        elif sub_command == "caniqueue":
+            embed.title = "Can I queue? / I'm too bad to queue."
+            embed.description = "Yes, of course you can queue. If you don't want to play with higher ranked players, don't play in all-divisions and play in your own division, although it will be alot harder to get a queue in those queues though"
+        elif sub_command == "deranked":
+            embed.title = "Why was my X rank role removed?"
+            embed.description = "You were suspected of not actually being the rank you said that you were, this may be from playing in 2/4/6 mans. Or checking rl tracker. If you feel this is in error, send VALID proof of your rank"
+        
+        await ctx.send(embed=embed)
     @interactions.extension_command(name="invite", scope=GUILD_ID,description="Invite link to the server")
     async def invitecommand(self,ctx):
         await ctx.send("You can invite your friends to the server with this link, thanks in advance!: https://discord.gg/QzTjdzKhfm")
@@ -124,6 +195,7 @@ class Commands(interactions.Extension):
         embed.set_thumbnail(url=self.bot_url)
         await ctx.send(embeds=embed)
 
+    
     @interactions.extension_command(name="clearsubmissions", scope=GUILD_ID, description="clears submissions", default_member_permissions=interactions.Permissions.ADMINISTRATOR)
     async def clear_database(self, ctx):
         if ctx.author.id != 339866237922181121: return
