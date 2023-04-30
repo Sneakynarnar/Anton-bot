@@ -161,7 +161,7 @@ class Commands(interactions.Extension):
             embed.title = "Why was my X rank role removed?"
             embed.description = "You were suspected of not actually being the rank you said that you were, this may be from playing in 2/4/6 mans. Or checking rl tracker. If you feel this is in error, send VALID proof of your rank"
         
-        await ctx.send(embed=embed)
+        await ctx.send(embeds=embed)
     @interactions.extension_command(name="invite", scope=GUILD_ID,description="Invite link to the server")
     async def invitecommand(self,ctx):
         await ctx.send("You can invite your friends to the server with this link, thanks in advance!: https://discord.gg/QzTjdzKhfm")
