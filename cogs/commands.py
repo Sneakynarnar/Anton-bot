@@ -108,6 +108,12 @@ class Commands(interactions.Extension):
             type=interactions.OptionType.SUB_COMMAND,
         ),
         interactions.Option(
+            name="platforms",
+            description="Describes if its not",
+            type=interactions.OptionType.SUB_COMMAND,
+        ),
+        
+        interactions.Option(
             name="question",
             description="Yup.",
             type=interactions.OptionType.SUB_COMMAND,
@@ -154,6 +160,9 @@ class Commands(interactions.Extension):
         elif sub_command == "noplatform3":
             embed.title = "Its not annoying to download though? / doesn't supports weird formats?"
             embed.description = "If it isn't annoying to download, simply not enough people use the platform for it to be worth it to add it as a supported platform"
+        elif sub_command == "platforms":
+            embed.title = "What are the supported platforms?"
+            embed.description="- YouTube\n- Gif Your Game\n- Medal\n- Xbox\n- Twitter"
         elif sub_command == "srsly":
             embed.title  = "Do you really have a commmand for every single question? | Is this command really needed?"
             embed.description="Yes."
