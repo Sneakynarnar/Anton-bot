@@ -135,7 +135,6 @@ class Commands(interactions.Extension):
     ])
     async def faqCommand(self, ctx, sub_command):
         embed = interactions.Embed()
-        embed.footer = "Frequently asked questions | Anton-bot | Sneakynarnar#7573"
         if sub_command == "noplatform":
             embed.title = "Why is X link not working in submit-my-clips?"
             embed.description = "Youtube, Gif your game, Medal, Xbox and Twitter are the only platforms supported at the moment, If you want to post a clip in ⁠<#941073900173938718> you need to use one of the supported platforms."
