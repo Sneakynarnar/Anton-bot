@@ -113,7 +113,7 @@ class Commands(interactions.Extension):
             type=interactions.OptionType.SUB_COMMAND,
         ),
         interactions.Option(
-            name="queueing",
+            name="srsly",
             description="Describes how to queue in 6 mans",
             type=interactions.OptionType.SUB_COMMAND,
         ),
@@ -152,7 +152,7 @@ class Commands(interactions.Extension):
             embed.title = "Why don't you add X platform as a supported platform?"
             embed.description = "We don't add your platform because it is probably annoying to download from and/or only supports weird formats of video that are too much effort to put in the video, simply upload your clip to a supported platform"
         elif sub_command == "noplatform3":
-            embed.title = "Its not annoying to download / supports weird formats"
+            embed.title = "Its not annoying to download though? / doesn't supports weird formats?"
             embed.description = "If it isn't annoying to download, simply not enough people use the platform for it to be worth it to add it as a supported platform"
         elif sub_command == "srsly":
             embed.title  = "Do you really have a commmand for every single question? | Is this command really needed?"
