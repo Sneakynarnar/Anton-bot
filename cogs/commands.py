@@ -114,13 +114,8 @@ class Commands(interactions.Extension):
         ),
         
         interactions.Option(
-            name="question",
-            description="Yup.",
-            type=interactions.OptionType.SUB_COMMAND,
-        ),
-        interactions.Option(
             name="srsly",
-            description="Describes how to queue in 6 mans",
+            description="Yup.",
             type=interactions.OptionType.SUB_COMMAND,
         ),
         interactions.Option(
