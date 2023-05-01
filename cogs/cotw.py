@@ -206,7 +206,6 @@ class COTW(interactions.Extension):
     async def on_message_delete(self, msg):
         if msg.channel_id == self.channel:
             cur = connect(host)
-            
             cur.execute("DELETE FROM submissions WHERE msgId = %s",(int(msg.id),))
             print("deleted")
             cur.close()
@@ -225,9 +224,9 @@ class COTW(interactions.Extension):
                 return
             else: 
                 cur.execute("UPDATE submissions SET score = %s WHERE msgId = %s", (record[2]+1, int(msg.message_id)))
+                con.commit()
                 print(record)
-            if record is None or record[0] != msg.user_id: return
-            con.commit()
+            if record is None or record[0] != msg.user_id: return 
             cur.close()
             con.close()
             submission = interactions.Message(**await self.bot._http.get_message(channel_id=self.channel,message_id= msg.message_id, ), _client=self.bot._http)
@@ -249,8 +248,9 @@ class COTW(interactions.Extension):
                 return
             else: 
                 cur.execute("UPDATE submissions SET score = %s WHERE msgId = %s", (record[0]-1, int(msg.message_id)))
+                con.commit()
             if record is None or record[0] != msg.user_id: return
-            con.commit()
+            
             cur.close()
             con.close()        
 
