@@ -96,7 +96,7 @@ class COTW(interactions.Extension):
         con.commit()
         modChannel = interactions.Channel(**await self.bot._http.get_channel(992955793697689690), _client=self.bot._http)
         embed = await self.getLeaderBoard()
-        await modChannel.send(content="Week was reset, here is the leaderboard", embeds=embed)
+        await modChannel.send(content="Week was reset, here is the leaderboard. If there is no leaderboard there was probably no submissions.", embeds=embed)
         channel = interactions.Channel(**await self.bot._http.get_channel(self.channel), _client=self.bot._http)
         embed= interactions.Embed(title="All submissions reset!", description="Every monday at midnight, submissions reset for the next video. Do /submissions to see your submissions")
         await ctx.send("Done. Week manually restarted")
