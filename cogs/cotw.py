@@ -75,6 +75,8 @@ class COTW(interactions.Extension):
             score = up
             records[i] = list(records[i])
             records[i].append(score)
+            if i > 10:
+                break;
             i+=1
         for record in sorted(records, key=takeScore, reverse=True):
             try:
