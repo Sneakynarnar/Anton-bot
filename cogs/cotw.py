@@ -93,17 +93,18 @@ class COTW(interactions.Extension):
         logger.debug(f"Restarting week at from command at {date}")
         cur = connect(host)
         cur.execute("DELETE FROM submissions")
-
+        con.commit()
+        cur.close()
+        con.close()
         channel = interactions.Channel(**await self.bot._http.get_channel(self.channel), _client=self.bot._http)
         embed= interactions.Embed(title="All submissions reset!", description="Every monday at midnight, submissions reset for the next video. Do /submissions to see your submissions")
         await channel.send(embeds=embed)
         modChannel = interactions.Channel(**await self.bot._http.get_channel(992955793697689690), _client=self.bot._http)
         embed = await self.getLeaderBoard()
         await modChannel.send(embeds=embed)
-        con.commit()
+        
         await ctx.send("Done. Week manually restarted")
-        cur.close()
-        con.close()
+
 
     @interactions.extension_command(name="submitafter", description="submits all posts after a certain point", scope=GUILD_ID, default_member_permissions=interactions.Permissions.ADMINISTRATOR, options = [interactions.Option(name="message", description="The message to submit after", type=interactions.OptionType.INTEGER)])
     async def submitAfter(self, ctx: interactions.CommandContext, id: interactions.Message):
