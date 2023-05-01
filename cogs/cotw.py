@@ -225,6 +225,7 @@ class COTW(interactions.Extension):
                 return
             else: 
                 cur.execute("UPDATE submissions SET score = %s WHERE msgId = %s", (record[2]+1, int(msg.message_id)))
+                print(record)
             if record is None or record[0] != msg.user_id: return
             con.commit()
             cur.close()
@@ -346,7 +347,6 @@ class COTW(interactions.Extension):
             con.commit()
             print((int(msg.author.id), int(msg.id)))
             await msg.create_reaction("👍")
-            await msg.create_reaction("👎")
             await msg.create_thread(name="Clip comments", invitable=True)
 
             
