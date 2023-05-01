@@ -45,7 +45,7 @@ class COTW(interactions.Extension):
         self.channel = 941073900173938718   
     async def getLeaderBoard(self, ctx=None):
         cur = connect(host)
-        cur.execute("SELECT * FROM submissions")
+        cur.execute("SELECT * FROM submissions ORDER BY score DESC")
         records = cur.fetchall()
         if len(records) == 0:
             if ctx is not None:
@@ -54,31 +54,10 @@ class COTW(interactions.Extension):
                 print("No one has submitted anything")
             return
 
-        def takeScore(elem):
-            
-            return elem[2]
         guild = interactions.Guild(**await self.bot._http.get_guild(GUILD_ID))
         embed = interactions.Embed(title="Clip leaderboard")
         counter=1
-        i = 0
         for record in records:
-            msgId = record[1]
-            try:
-
-                msg = interactions.Message(**await self.bot._http.get_message(self.channel, msgId))
-            except:
-                records[i] = list(records[i])
-                records[i].append(0)
-                continue
-            reactions = msg.reactions
-            up = reactions[0].count - 1
-            score = up
-            records[i] = list(records[i])
-            records[i].append(score)
-            if i > 10:
-                break;
-            i+=1
-        for record in sorted(records, key=takeScore, reverse=True):
             try:
                 member =  interactions.User(**await self.bot._http.get_user(record[0]))
             except:
