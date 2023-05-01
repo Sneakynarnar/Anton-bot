@@ -217,7 +217,7 @@ class COTW(interactions.Extension):
     @interactions.extension_listener()
     async def on_message_reaction_add(self,msg: interactions.MessageReaction):
         cur = connect(host)
-        cur.execute("SELECT * FROM submissions WHERE msgId = %s", int(msg.message_id))
+        cur.execute("SELECT * FROM submissions WHERE msgId = %s", (int(msg.message_id),))
         record = cur.fetchone()
     
         if msg.emoji.name == "👍" and msg.user_id != 966807823486963713:
@@ -240,7 +240,7 @@ class COTW(interactions.Extension):
     @interactions.extension_listener()
     async def on_message_reaction_remove(self,msg: interactions.MessageReaction):
         cur = connect(host)
-        cur.execute("SELECT score FROM submissions WHERE msgId = %s", int(msg.message_id))
+        cur.execute("SELECT score FROM submissions WHERE msgId = %s", (int(msg.message_id),))
         record = cur.fetchone()
     
         if msg.emoji.name == "👍" and msg.user_id != 966807823486963713:
