@@ -221,7 +221,9 @@ class COTW(interactions.Extension):
             con.commit()
             cur.close()
             con.close()
-
+        
+        
+    
     @interactions.extension_listener()
     async def on_message_delete(self, msg):
         if msg.channel_id == self.channel:
@@ -236,13 +238,17 @@ class COTW(interactions.Extension):
 
     @interactions.extension_listener()
     async def on_message_reaction_add(self,msg: interactions.MessageReaction):
-        
+        cur = connect(host)
+        cur.execute("SELECT * FROM submissions WHERE msgId = %s", int(msg.message_id))
+        record = cur.fetchone()
+    
         if msg.emoji.name == "👍" and msg.user_id != 966807823486963713:
-            cur = connect(host)
-            cur.execute("SELECT * FROM submissions WHERE msgId = %s", (int(msg.message_id),))
-            record = cur.fetchone()
+            if record is None:
+                return
+            else: 
+                cur.execute("UPDATE submissions SET score = %s WHERE msgId = %s", (record[2]+1, int(msg.id)))
             if record is None or record[0] != msg.user_id: return
-            
+            con.commit()
             cur.close()
             con.close()
             submission = interactions.Message(**await self.bot._http.get_message(channel_id=self.channel,message_id= msg.message_id, ), _client=self.bot._http)
@@ -252,7 +258,22 @@ class COTW(interactions.Extension):
             error = await channel.send("We appreciate your self-pride but you cannot upvote your own clip!")
             await asyncio.sleep(3)
             await error.delete()
-            
+    
+    @interactions.extension_listener()
+    async def on_message_reaction_remove(self,msg: interactions.MessageReaction):
+        cur = connect(host)
+        cur.execute("SELECT score FROM submissions WHERE msgId = %s", int(msg.message_id))
+        record = cur.fetchone()
+    
+        if msg.emoji.name == "👍" and msg.user_id != 966807823486963713:
+            if record is None:
+                return
+            else: 
+                cur.execute("UPDATE submissions SET score = %s WHERE msgId = %s", (record[0]-1, int(msg.id)))
+            if record is None or record[0] != msg.user_id: return
+            con.commit()
+            cur.close()
+            con.close()        
 
     @interactions.extension_listener()
     async def on_message_create(self, msg):
