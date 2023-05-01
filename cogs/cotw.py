@@ -64,8 +64,11 @@ class COTW(interactions.Extension):
         for record in records:
             msgId = record[1]
             try:
+
                 msg = interactions.Message(**await self.bot._http.get_message(self.channel, msgId))
             except:
+                records[i] = list(records[i])
+                records[i].append(0)
                 continue
             reactions = msg.reactions
             up = reactions[0].count - 1
@@ -74,7 +77,10 @@ class COTW(interactions.Extension):
             records[i].append(score)
             i+=1
         for record in sorted(records, key=takeScore, reverse=True):
-            member =  interactions.User(**await self.bot._http.get_user(record[0]))
+            try:
+                member =  interactions.User(**await self.bot._http.get_user(record[0]))
+            except:
+                continue
             if counter == 1:
                 place = ":first_place:"
             elif counter == 2:
@@ -85,7 +91,7 @@ class COTW(interactions.Extension):
                 break
             else:
                 place= "#" + str(counter)
-            score = record[2]
+            score = record[2] if record[2] is not None else "Score: Unknown"
             id = record[1]
             mention = member.mention if member is not None else "Deleted user"
             name = member.username if member is not None else "Deleted user"
@@ -192,7 +198,6 @@ class COTW(interactions.Extension):
                 
     @interactions.extension_listener()
     async def on_start(self):
-        cur =connect(host)
         now = datetime.utcnow()
         future = datetime(now.year, now.month, now.day,0,0,0,0) + timedelta(days=1)
         logger.debug(f"waiting for {(future-now).seconds} seconds")
@@ -201,6 +206,7 @@ class COTW(interactions.Extension):
         self.clearDataBase.start(self)
         
         if datetime.utcnow().strftime("%a").lower() == "mon":
+            cur = connect(host)
             date = datetime.utcnow()
             logger.debug(f"Restarting week at {date}")
             cur.execute("DELETE FROM submissions")
@@ -210,11 +216,9 @@ class COTW(interactions.Extension):
             channel = interactions.Channel(**await self.bot._http.get_channel(self.channel), _client=self.bot._http)
             embed= interactions.Embed(title="All submissions reset!", description="Every week submissions reset for the next video. Do /submissionights to see your submissions")
             await channel.send(embeds=embed)
-
-
-        con.commit()
-        cur.close()
-        con.close()
+            con.commit()
+            cur.close()
+            con.close()
 
     @interactions.extension_listener()
     async def on_message_delete(self, msg):
