@@ -224,7 +224,7 @@ class COTW(interactions.Extension):
             if record is None:
                 return
             else: 
-                cur.execute("UPDATE submissions SET score = %s WHERE msgId = %s", (record[2]+1, int(msg.id)))
+                cur.execute("UPDATE submissions SET score = %s WHERE msgId = %s", (record[2]+1, int(msg.message_id)))
             if record is None or record[0] != msg.user_id: return
             con.commit()
             cur.close()
