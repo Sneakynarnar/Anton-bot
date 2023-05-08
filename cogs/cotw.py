@@ -109,7 +109,7 @@ class COTW(interactions.Extension):
         
         channel = interactions.Channel(**await self.bot._http.get_channel(self.channel), _client=self.bot._http)
         cur = connect(host)
-        messages = await channel.history(start_at=ctx.target.id)
+        messages = channel.history(start_at=ctx.target.id)
         status = ""
         for message in messages:
             asyncio.sleep(0.1)
