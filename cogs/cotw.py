@@ -104,7 +104,7 @@ class COTW(interactions.Extension):
         cur.close()
         con.close()
 
-    @interactions.extension_command(name="submitafter", description="submits all posts after a certain point", scope=GUILD_ID, default_member_permissions=interactions.Permissions.ADMINISTRATOR, options = [interactions.Option(name="message", description="The message to submit after", type=interactions.OptionType.INTEGER)])
+    @interactions.extension_command(name="submitafter", type=interactions.ApplicationCommandType.MESSAGE, description="submits all posts after a certain point", scope=GUILD_ID, default_member_permissions=interactions.Permissions.ADMINISTRATOR, options = [interactions.Option(name="message", description="The message to submit after", type=interactions.OptionType.INTEGER)])
     async def submitAfter(self, ctx: interactions.CommandContext, id: interactions.Message):
         channel = interactions.Channel(**await self.bot._http.get_channel(self.channel), _client=self.bot._http)
         cur = connect(host)
@@ -121,7 +121,7 @@ class COTW(interactions.Extension):
                 await ctx.send("That person's clips has already been submitted!", ephemeral=True)
                 return
             authorId = message.author.id
-            cur.execute("INSERT INTO submissions VALUES (%s,%s)", (int(authorId), int(message.id)))
+            cur.execute("INSERT INTO submissions VALUES (%s,%s,0)", (int(authorId), int(message.id)))
             await message.create_reaction("👍", )
 
             status+=f"Resubmitted {message.author.username}'s clip! https://discord.com/channels/917891087006334976/{str(self.channel)}/{message.id}\n"
@@ -141,7 +141,7 @@ class COTW(interactions.Extension):
             await ctx.send("That person's clips has already been submitted!", ephemeral=True)
             return
         authorId = message.author.id
-        cur.execute("INSERT INTO submissions VALUES (%s,%s)", (int(authorId), int(message.id)))
+        cur.execute("INSERT INTO submissions VALUES (%s,%s,0)", (int(authorId), int(message.id)))
 
         await message.create_reaction("👍", )
         await message.create_reaction("👎", )
