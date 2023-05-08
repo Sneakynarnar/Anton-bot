@@ -105,10 +105,11 @@ class COTW(interactions.Extension):
         con.close()
 
     @interactions.extension_command(name="submitafter", type=interactions.ApplicationCommandType.MESSAGE, description="submits all posts after a certain point", scope=GUILD_ID, default_member_permissions=interactions.Permissions.ADMINISTRATOR, options = [interactions.Option(name="message", description="The message to submit after", type=interactions.OptionType.INTEGER)])
-    async def submitAfter(self, ctx: interactions.CommandContext, id: interactions.Message):
+    async def submitAfter(self, ctx: interactions.CommandContext):
+        
         channel = interactions.Channel(**await self.bot._http.get_channel(self.channel), _client=self.bot._http)
         cur = connect(host)
-        messages = await channel.history(start_at=id)
+        messages = await channel.history(start_at=ctx.target.id)
         status = ""
         for message in messages:
             asyncio.sleep(0.1)
