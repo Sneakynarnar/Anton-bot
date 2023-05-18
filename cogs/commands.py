@@ -98,6 +98,11 @@ class Commands(interactions.Extension):
             type=interactions.OptionType.SUB_COMMAND,
         ),
         interactions.Option(
+            name="queueing",
+            description="Describes queueing 6 mans",
+            type=interactions.OptionType.SUB_COMMAND,
+        ),
+        interactions.Option(
             name="noplatform2",
             description="Describes why it is like this",
             type=interactions.OptionType.SUB_COMMAND,
