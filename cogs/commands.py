@@ -23,7 +23,7 @@ def connect(host):
     con = mysql.connector.connect(
         host=host,
         user="sneaky",
-        passwd="Dominus7206!",
+        passwd="*****",
         database="AntonServer",
     )
     cur = con.cursor(buffered=True)
